@@ -58,10 +58,26 @@ parameter : PRIMITIVE_TYPES IDENTIFIER;
 
 statements: variableDeclaration | procedureDeclaration | procedureCall;
 
-expression : additiveExpression;
+expression : logicalOrExpression;
+
+logicalOrExpression : logicalAndExpression (LOGICAL_OR logicalAndExpression)*;
+
+logicalAndExpression : equalityExpression (LOGICAL_AND equalityExpression)*;
+
+equalityExpression : relationalExpression ((EQUAL | NOT_EQUAL) relationalExpression)*;
+
+relationalExpression : additiveExpression ((LESS | GREATER | LESS_EQUAL | GREATER_EQUAL) additiveExpression)*;
 
 additiveExpression : multiplicativeExpression ((PLUS | MINUS) multiplicativeExpression)*;
 
 multiplicativeExpression : unaryExpression ((MULTIPLY | DIVIDE | MODULO) unaryExpression)*;
 
-unaryExpression : (PLUS | MINUS) unaryExpression;
+unaryExpression : (PLUS | MINUS) unaryExpression
+               | primaryExpression;
+
+primaryExpression : logicalNotExpression
+                | INTEGER_LITERAL
+                | IDENTIFIER
+                | LPAREN expression RPAREN;
+
+logicalNotExpression : LOGICAL_NOT primaryExpression;
