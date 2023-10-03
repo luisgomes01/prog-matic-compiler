@@ -41,10 +41,15 @@ RELATIONAL_OPERATORS:  EQUAL | NOT_EQUAL | LESS | GREATER | LESS_EQUAL | GREATER
 
 LOGICAL_OPERATORS:  LOGICAL_NOT | LOGICAL_AND | LOGICAL_OR;
 
-variableDeclaration : PRIMITIVE_TYPES IDENTIFIER SEMICOLON
-                   | PRIMITIVE_TYPES POINTER IDENTIFIER SEMICOLON | PRIMITIVE_TYPES variableInitialization;
 
-variableInitialization: IDENTIFIER EQUAL expression;
+program: statements EOF;
+
+statements: (variableDeclaration | procedureDeclaration | procedureCall)*;
+
+variableDeclaration : PRIMITIVE_TYPES IDENTIFIER SEMICOLON
+                   | PRIMITIVE_TYPES POINTER IDENTIFIER SEMICOLON | PRIMITIVE_TYPES variableInitialization SEMICOLON;
+
+variableInitialization: IDENTIFIER '=' expression;
 
 procedureDeclaration : PRIMITIVE_TYPES PROCEDURE IDENTIFIER LPAREN parameterList RPAREN LBRACE statements RBRACE;
 
@@ -55,8 +60,6 @@ parameterList : (parameter (COMMA parameter)*)?;
 argumentList: (IDENTIFIER (COMMA IDENTIFIER)*)?;
 
 parameter : PRIMITIVE_TYPES IDENTIFIER;
-
-statements: variableDeclaration | procedureDeclaration | procedureCall;
 
 expression : logicalOrExpression;
 
