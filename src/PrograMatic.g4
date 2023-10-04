@@ -2,7 +2,14 @@ grammar PrograMatic;
 
 program: (statements)* EOF;
 
-statements: variableDeclaration | pointerDeclaration | procedureDeclaration | procedureCall | attribution;
+statements
+    : variableDeclaration
+    | pointerDeclaration
+    | procedureDeclaration
+    | procedureCall
+    | attribution
+    | ifDeclaration
+    | loopDeclaraion;
 
 variableDeclaration: typeDeclaration IDENTIFIER SEMICOLON | typeDeclaration attribution;
 
@@ -20,7 +27,15 @@ typeDeclaration: 'int' | 'str' | 'char' | 'float' | 'boolean';
 
 attributionValues:  STRING_LITERAL | CHAR_LITERAL | FLOAT_LITERAL | BOOLEAN_LITERAL;
 
+ifDeclaration: 'if' LPAREN conditionalExpression RPAREN LBRACE (statements)* RBRACE (elseDeclaration)*;
+
+elseDeclaration: 'else' LBRACE (statements)* RBRACE;
+
+loopDeclaraion: 'loop' LPAREN conditionalExpression RPAREN LBRACE (statements)* RBRACE;
+
 expression : logicalOrExpression;
+
+conditionalExpression: logicalOrExpression ((EQUAL | NOT_EQUAL | GREATER | LESS | GREATER_EQUAL | LESS_EQUAL))*;
 
 logicalOrExpression : logicalAndExpression (LOGICAL_OR logicalAndExpression)*;
 
