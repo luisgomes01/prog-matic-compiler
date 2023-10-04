@@ -4,7 +4,7 @@ program: (statements)* EOF;
 
 statements: variableDeclaration | pointerDeclaration | procedureDeclaration | procedureCall | attribution;
 
-variableDeclaration: typeDeclaration IDENTIFIER SEMICOLON | typeDeclaration IDENTIFIER '=' attributionValues SEMICOLON;
+variableDeclaration: typeDeclaration IDENTIFIER SEMICOLON | typeDeclaration attribution;
 
 attribution: IDENTIFIER ATTRIBUTION (expression | attributionValues) SEMICOLON;
 
@@ -18,7 +18,7 @@ argumentList: (IDENTIFIER (COMMA IDENTIFIER)*)?;
 
 typeDeclaration: 'int' | 'str' | 'char' | 'float' | 'boolean';
 
-attributionValues: INTEGER_LITERAL | STRING_LITERAL | CHAR_LITERAL | FLOAT_LITERAL | BOOLEAN_LITERAL;
+attributionValues:  STRING_LITERAL | CHAR_LITERAL | FLOAT_LITERAL | BOOLEAN_LITERAL;
 
 expression : logicalOrExpression;
 
