@@ -70,7 +70,7 @@ FLOAT_LITERAL: [0-9]+ '.' [0-9]+;
 BOOLEAN_LITERAL: 'true' | 'false';
 POINTER: '->';
 ADDRESS: '$';
-IDENTIFIER: [a-zA-Z]+;
+IDENTIFIER: [a-zA-Z]+ ([a-zA-Z]+ | INTEGER_LITERAL | '_')*;
 SEMICOLON: ';';
 LPAREN : '(';
 RPAREN : ')';
