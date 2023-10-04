@@ -1,65 +1,24 @@
 grammar PrograMatic;
 
-IDENTIFIER : Letter (Letter | Digit | '_')*;
-INTEGER_LITERAL : Digit+;
-STRING_LITERAL : QUOTE (Character | '\\"')* QUOTE;
+program: (statements)* EOF;
 
+statements: variableDeclaration | pointerDeclaration | procedureDeclaration | procedureCall | attribution;
 
-Letter : [a-zA-Z];
-Digit : [0-9];
-Character : . -> channel(HIDDEN);
+variableDeclaration: typeDeclaration IDENTIFIER SEMICOLON | typeDeclaration IDENTIFIER '=' attributionValues SEMICOLON;
 
+attribution: IDENTIFIER ATTRIBUTION (expression | attributionValues) SEMICOLON;
 
-PRIMITIVE_TYPES: 'int' | 'float' | 'char' | 'void' | 'str';
+pointerDeclaration: typeDeclaration POINTER IDENTIFIER '=' ADDRESS IDENTIFIER SEMICOLON;
 
-POINTER : '->';
-SEMICOLON : ';';
-PROCEDURE : 'prc';
-LPAREN : '(';
-RPAREN : ')';
-LBRACE : '{';
-RBRACE : '}';
-COMMA : ',';
-QUOTE: '"';
-PLUS : '+';
-MINUS : '-';
-MULTIPLY : '*';
-DIVIDE : '/';
-MODULO : '%';
-GREATER : '>';
-LESS : '<';
-EQUAL : '==';
-NOT_EQUAL : '!=';
-GREATER_EQUAL : '>=';
-LESS_EQUAL : '<=';
-LOGICAL_AND : '&&';
-LOGICAL_OR : '||';
-LOGICAL_NOT : '!';
+procedureDeclaration: procedure IDENTIFIER LPAREN parameterList RPAREN  LBRACE (statements)* RBRACE;
 
-ARITHMETIC_OPERATORS: PLUS | MINUS |  MULTIPLY | DIVIDE | MODULO;
-RELATIONAL_OPERATORS:  EQUAL | NOT_EQUAL | LESS | GREATER | LESS_EQUAL | GREATER_EQUAL;
-
-LOGICAL_OPERATORS:  LOGICAL_NOT | LOGICAL_AND | LOGICAL_OR;
-
-
-program: statements EOF;
-
-statements: (variableDeclaration | procedureDeclaration | procedureCall)*;
-
-variableDeclaration : PRIMITIVE_TYPES IDENTIFIER SEMICOLON
-                   | PRIMITIVE_TYPES POINTER IDENTIFIER SEMICOLON | PRIMITIVE_TYPES variableInitialization SEMICOLON;
-
-variableInitialization: IDENTIFIER '=' expression;
-
-procedureDeclaration : PRIMITIVE_TYPES PROCEDURE IDENTIFIER LPAREN parameterList RPAREN LBRACE statements RBRACE;
-
-procedureCall: IDENTIFIER LPAREN argumentList LBRACE SEMICOLON;
-
-parameterList : (parameter (COMMA parameter)*)?;
+procedureCall: IDENTIFIER '(' argumentList ')' SEMICOLON;
 
 argumentList: (IDENTIFIER (COMMA IDENTIFIER)*)?;
 
-parameter : PRIMITIVE_TYPES IDENTIFIER;
+typeDeclaration: 'int' | 'str' | 'char' | 'float' | 'boolean';
+
+attributionValues: INTEGER_LITERAL | STRING_LITERAL | CHAR_LITERAL | FLOAT_LITERAL | BOOLEAN_LITERAL;
 
 expression : logicalOrExpression;
 
@@ -84,3 +43,42 @@ primaryExpression : logicalNotExpression
                 | LPAREN expression RPAREN;
 
 logicalNotExpression : LOGICAL_NOT primaryExpression;
+
+
+parameterList : (parameter (COMMA parameter)*)?;
+parameter : typeDeclaration IDENTIFIER;
+
+INTEGER_LITERAL: [0-9]+;
+STRING_LITERAL: '"' (~["\r\n])* '"';
+CHAR_LITERAL: '\'' ~["\r\n'] '\'';
+FLOAT_LITERAL: [0-9]+ '.' [0-9]+;
+BOOLEAN_LITERAL: 'true' | 'false';
+POINTER: '->';
+ADDRESS: '$';
+IDENTIFIER: [a-zA-Z]+;
+SEMICOLON: ';';
+LPAREN : '(';
+RPAREN : ')';
+LBRACE : '{';
+RBRACE : '}';
+COMMA: ',';
+ATTRIBUTION: '=';
+PLUS : '+';
+MINUS : '-';
+MULTIPLY : '*';
+DIVIDE : '/';
+MODULO : '%';
+GREATER : '>';
+LESS : '<';
+EQUAL : '==';
+NOT_EQUAL : '!=';
+GREATER_EQUAL : '>=';
+LESS_EQUAL : '<=';
+LOGICAL_AND : '&&';
+LOGICAL_OR : '||';
+LOGICAL_NOT : '!';
+
+
+procedure: 'func';
+
+WS: [ \t\r\n]+ -> skip;
